@@ -34,7 +34,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 		try{
 			this.add(this.size, element);
 			return true;
-		}catch(Exception e){
+		}catch(IndexOutOfBoundsException e){
 			return false;
 		}
 		
@@ -70,6 +70,9 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public void add(int index, E element ) 
 	{
 		// TODO: Implement this method
+		if(element == null)
+			throw new NullPointerException();
+		
 		LLNode<E> elemToAdd = new LLNode<E>(element);
 		if ((index > this.size) || (index < 0)) {
 			throw new IndexOutOfBoundsException();
@@ -140,6 +143,9 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E set(int index, E element) 
 	{
 		// TODO: Implement this method
+		if(element == null)
+			throw new NullPointerException();
+		
 		if ((index >= this.size) || (index < 0)) {
 			throw new IndexOutOfBoundsException();
 		}else{

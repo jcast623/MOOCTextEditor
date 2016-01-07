@@ -161,6 +161,12 @@ public class MyLinkedListTester {
 	{
         // TODO: implement this test
 		//Test add to empty list
+		try{
+			emptyList.add(null);
+			fail("Check null pointer exception");
+		}catch(NullPointerException e){
+			
+		}
 		emptyList.add(7);
 		assertEquals("Add: check element added to empty list ", (Integer)7,emptyList.get(emptyList.size -1));
 		
@@ -194,6 +200,13 @@ public class MyLinkedListTester {
 	public void testAddAtIndex()
 	{
         // TODO: implement this test
+		try{
+			list1.add(0,null);
+			fail("Check null pointer exception");
+		}catch(NullPointerException e){
+			
+		}
+		
 		//Test add to start
 		list1.add(0, 138);
 		assertEquals("Add: check element added to beginning of existing list ", (Integer)138, list1.get(0));
@@ -235,6 +248,12 @@ public class MyLinkedListTester {
 	public void testSet()
 	{
 	    // TODO: implement this test
+		try{
+			shortList.set(0, null);
+			fail("check null pointer exception");
+		}catch(NullPointerException e){
+			
+		}
 	    //Set at start
 		String a = shortList.set(0, "AA");
 	    assertEquals("Set: check 'A' was removed ", "A", a);
