@@ -22,6 +22,7 @@ public class MyLinkedListTester {
 	MyLinkedList<Integer> emptyList;
 	MyLinkedList<Integer> longerList;
 	MyLinkedList<Integer> list1;
+	MyLinkedList<Integer> longerList2;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -42,6 +43,12 @@ public class MyLinkedListTester {
 		list1.add(65);
 		list1.add(21);
 		list1.add(42);
+		
+		longerList2 = new MyLinkedList<Integer>();
+		for (int i = 0; i < LONG_LIST_LENGTH; i++)
+		{
+			longerList2.add(LONG_LIST_LENGTH - i);
+		}
 		
 	}
 
@@ -115,6 +122,35 @@ public class MyLinkedListTester {
 		assertEquals("Remove: check size is correct ", 2, list1.size());
 		
 		// TODO: Add more tests here
+		//test remove at end
+		int b = longerList.remove(LONG_LIST_LENGTH-1);
+		assertEquals("Remove: check b is correct ", 9, b);
+		assertEquals("Remove: check size is correct ", 9, longerList.size());
+		assertEquals("Remove: check new last element is correct ", (Integer)8, longerList.get(longerList.size() - 1));
+		
+		//test remove middle
+		int mid = longerList2.size()/2;
+		int c = longerList2.remove(mid);
+		assertEquals("Remove: check c is correct ", 5, c);
+		assertEquals("Remove: check size is correct ", 9, longerList2.size());
+		assertEquals("Remove: check new element at mid is correct ", (Integer)4, longerList2.get(mid));
+		
+		//Out of bounds
+		try {
+			shortList.remove(-1);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
+		
+		try {
+			shortList.remove(3);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
 	}
 	
 	/** Test adding an element into the end of the list, specifically
@@ -124,6 +160,14 @@ public class MyLinkedListTester {
 	public void testAddEnd()
 	{
         // TODO: implement this test
+		//Test add to empty list
+		emptyList.add(7);
+		assertEquals("Add: check element added to empty list ", (Integer)7,emptyList.get(emptyList.size -1));
+		
+		//Test add to existing list
+		longerList.add(138);
+		assertEquals("Add: check element added to existing list ", (Integer)138,longerList.get(longerList.size -1));
+		
 		
 	}
 
@@ -133,6 +177,11 @@ public class MyLinkedListTester {
 	public void testSize()
 	{
 		// TODO: implement this test
+		//Test empty list size
+		assertEquals("Size: check empty list size", 0, emptyList.size());
+				
+		//Test populated list size
+		assertEquals("Size: check empty list size", LONG_LIST_LENGTH, longerList.size());
 	}
 
 	
@@ -145,6 +194,39 @@ public class MyLinkedListTester {
 	public void testAddAtIndex()
 	{
         // TODO: implement this test
+		//Test add to start
+		list1.add(0, 138);
+		assertEquals("Add: check element added to beginning of existing list ", (Integer)138, list1.get(0));
+		
+		//Test add to end
+		int end = list1.size();
+		list1.add(end, 28);
+		assertEquals("Add: check element added to end of existing list ", (Integer)28, list1.get(end));
+		
+		//Test add to 0 < i < end
+		int mid = list1.size()/2;
+		list1.add(mid, 86);
+		assertEquals("Add: check element added to middle of existing list ", (Integer)86, list1.get(mid));
+		
+		//Test add to empty list
+		emptyList.add(0, 40);
+		assertEquals("Add: check element added to empty list ", (Integer)40, emptyList.get(0));
+		
+		//Out of bounds tests
+		try{
+			list1.add(-1, 99);
+			fail("Check out of bounds");
+		}catch(IndexOutOfBoundsException e){
+			
+		}
+		
+		try{
+			list1.add(list1.size()+1, 99);
+			fail("Check out of bounds");
+		}catch(IndexOutOfBoundsException e){
+			
+		}
+		
 		
 	}
 	
@@ -153,6 +235,43 @@ public class MyLinkedListTester {
 	public void testSet()
 	{
 	    // TODO: implement this test
+	    //Set at start
+		String a = shortList.set(0, "AA");
+	    assertEquals("Set: check 'A' was removed ", "A", a);
+	    assertEquals("Set: check 'AA' was inserted at position 0", "AA", shortList.get(0));
+	    assertEquals("Set: check size unchanged ", 2, shortList.size());
+	    
+	    //Set at end
+	    String b = shortList.set(1, "BB");
+	    assertEquals("Set: check 'B' was removed ", "B", b);
+	    assertEquals("Set: check 'BB' was inserted at position 1 ", "BB", shortList.get(1));
+	    assertEquals("Set: check 'AA' index unchanged ", "AA", shortList.get(0));
+	    assertEquals("Set: check size unchanged ", 2, shortList.size());
+	    
+	    //Set in middle
+	    int c = longerList.set(5, 55);
+	    assertEquals("Set: check 5 was removed ", 5, c);
+	    assertEquals("Set: check 55 was inserted at position 5 ", (Integer)55, longerList.get(5));
+	    assertEquals("Set: check index of 4 unchanged ", (Integer)4, longerList.get(4));
+	    assertEquals("Set: check index of 6 unchanged ", (Integer)6, longerList.get(6));
+	    assertEquals("Set: check size unchanged ", LONG_LIST_LENGTH, longerList.size());
+	    
+	    //Out of bounds
+	    try {
+			longerList.set(-1, 99);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
+	    
+	    try {
+			longerList.set(LONG_LIST_LENGTH, 99);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		
+		}
 	    
 	}
 	

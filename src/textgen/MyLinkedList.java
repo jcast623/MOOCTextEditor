@@ -17,6 +17,11 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
 		// TODO: Implement this method
+		this.head = new LLNode<E>(null);
+		this.tail = new LLNode<E>(null);
+		this.size = 0;
+		this.head.next = this.tail;
+		this.tail.prev = this.head;
 	}
 
 	/**
@@ -26,15 +31,35 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public boolean add(E element ) 
 	{
 		// TODO: Implement this method
-		return false;
+		try{
+			this.add(this.size, element);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+		
 	}
 
-	/** Get the element at position index 
-	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
-	public E get(int index) 
-	{
+	/**
+	 * Get the element at position index
+	 * 
+	 * @throws IndexOutOfBoundsException
+	 *             if the index is out of bounds.
+	 */
+	public E get(int index) {
 		// TODO: Implement this method.
-		return null;
+		if ((index > (this.size - 1)) || (index < 0)) {
+			throw new IndexOutOfBoundsException();
+		} else {
+			LLNode<E> cur = this.head.next;
+			int count = 0;
+
+			while (count < index) {
+				cur = cur.next;
+				count++;
+			}
+			return cur.data;
+		}
 	}
 
 	/**
@@ -45,6 +70,26 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public void add(int index, E element ) 
 	{
 		// TODO: Implement this method
+		LLNode<E> elemToAdd = new LLNode<E>(element);
+		if ((index > this.size) || (index < 0)) {
+			throw new IndexOutOfBoundsException();
+		}else{
+			
+			int count = 0;
+			LLNode<E> cur = this.head;
+			
+			while(count <= index){
+				cur = cur.next;
+				count++;
+			}
+			
+			LLNode<E> prevNode = cur.prev;
+			prevNode.next = elemToAdd;
+			cur.prev = elemToAdd;
+			elemToAdd.next = cur;
+			elemToAdd.prev = prevNode;
+			this.size++;
+		}
 	}
 
 
@@ -52,7 +97,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public int size() 
 	{
 		// TODO: Implement this method
-		return -1;
+		return this.size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -64,7 +109,25 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E remove(int index) 
 	{
 		// TODO: Implement this method
-		return null;
+		if ((index >= this.size) || (index < 0)) {
+			throw new IndexOutOfBoundsException();
+		}else{
+			int count = 0;
+			LLNode<E> cur = this.head;
+			
+			while(count <= index){
+				cur = cur.next;
+				count++;
+			}
+			
+			LLNode<E> prevNode = cur.prev;
+			LLNode<E> nextNode = cur.next;
+			prevNode.next = nextNode;
+			nextNode.prev = prevNode;
+			this.size--;
+			return cur.data;
+			
+		}
 	}
 
 	/**
@@ -77,7 +140,13 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E set(int index, E element) 
 	{
 		// TODO: Implement this method
-		return null;
+		if ((index >= this.size) || (index < 0)) {
+			throw new IndexOutOfBoundsException();
+		}else{
+			E toRemove = this.remove(index);
+			this.add(index, element);
+			return toRemove;
+		}
 	}   
 }
 
@@ -95,6 +164,16 @@ class LLNode<E>
 		this.data = e;
 		this.prev = null;
 		this.next = null;
+	}
+	
+	public LLNode(E e, LLNode<E> prev){
+		this(e,prev,null);
+	}
+	
+	public LLNode(E e, LLNode<E> prev, LLNode<E> next){
+		this.data = e;
+		this.prev = prev;
+		this.next = next;
 	}
 
 }
