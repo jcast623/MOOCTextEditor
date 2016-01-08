@@ -1,9 +1,12 @@
 package textgen;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** 
  * An implementation of the MTG interface that uses a list of lists.
@@ -33,6 +36,23 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	public void train(String sourceText)
 	{
 		// TODO: Implement this method
+		ArrayList<String> tokens = new ArrayList<String>();
+		Pattern tokSplitter = Pattern.compile("[a-zA-Z]+[.?!]*");
+		Matcher m = tokSplitter.matcher(sourceText);
+		
+		int count = 0;
+		ListNode prevWord;
+		
+		while (m.find()) {
+			String currentWord = m.group();
+			if(count == 0){
+				this.starter = currentWord;
+				prevWord = new ListNode(currentWord);
+				this.wordList.add(prevWord);
+			}else{
+				prevWord.addNextWord(currentWord);
+			}
+		}
 	}
 	
 	/** 
