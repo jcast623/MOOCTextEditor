@@ -29,7 +29,40 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
-	    return false;
+		if(word.isEmpty())
+			return false;
+		
+		String wordLower = word.toLowerCase();
+		
+		if(this.isWord(wordLower))
+			return false;
+		
+		TrieNode current = this.root;
+		char[] wordArray = wordLower.toCharArray();
+		
+		for(int i = 0; i < wordArray.length; i++){
+			char c = wordArray[i];
+			
+			//No link to a node with this character
+			if(current.getChild(c) == null){
+				current = current.insert(c);
+			}else{
+				current = current.getChild(c);
+			}
+			
+			if((i+1) == wordArray.length){
+				current.setEndsWord(true);
+				if(this.size < 1){
+					this.size = 1;
+				}else{
+					this.size++;
+				}
+					
+			}
+		}
+		
+		
+	    return true;
 	}
 	
 	/** 
@@ -39,16 +72,53 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return this.size;
 	}
 	
 	
 	/** Returns whether the string is a word in the trie */
 	@Override
-	public boolean isWord(String s) 
-	{
-	    // TODO: Implement this method
-		return false;
+	public boolean isWord(String s) {
+		// TODO: Implement this method
+		if(s.isEmpty())
+			return false;
+		
+		String sLower = s.toLowerCase();
+		Set<Character> rootChars = this.root.getValidNextCharacters();
+		char[] sCharArray = sLower.toCharArray();
+
+		if (!rootChars.contains(sLower.charAt(0)))
+			return false;
+
+		// First character matches set of next valid characters from root, so
+		// continue to search
+		TrieNode current = root;
+		boolean isInTrie = false;
+
+		for (int i = 0; i < sCharArray.length; i++) {			
+
+			/*
+			 * We are somewhere between the root and a leaf node Let's check if
+			 * we can continue
+			 */
+			char c = sCharArray[i];
+			TrieNode child = current.getChild(c);
+
+			// We matched as many characters as we could, so return false
+			if (child == null) {
+				return false;
+			} else {
+				current = child;
+				// If last character, check if the node ends a word in the
+				// dictionary
+				if ((i + 1) == sCharArray.length) {
+					return current.endsWord();
+				}
+			}
+
+		}
+
+		return isInTrie;
 	}
 
 	/** 
@@ -75,8 +145,46 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
+    	
+    	TrieNode current = root;
+    	String prefixLower = prefix.toLowerCase();
+		char[] sCharArray = prefixLower.toCharArray();
+
+		for (int i = 0; i < sCharArray.length; i++) {
+			char c = sCharArray[i];
+			TrieNode child = current.getChild(c);
+
+			if (child == null) {
+				return new LinkedList<String>();
+			} else {
+				current = child;
+			}
+
+		}
+		
+		List<String> returnList = new LinkedList<String>();
+		List<TrieNode> queue = new LinkedList<TrieNode>();
+		
+		queue.add(current);
+		int curPosition = 0;
+		
+		while(queue.size() > curPosition){
+			if(returnList.size() == numCompletions){
+				break;
+			}else{
+				TrieNode cur = queue.get(curPosition);
+				if(cur.endsWord())
+					returnList.add(cur.getText());
+				
+				for(Character c : cur.getValidNextCharacters()){
+					queue.add(cur.getChild(c));
+				}
+				curPosition++;
+				
+			}
+		}
     	 
-         return null;
+         return returnList;
      }
 
  	// For debugging
